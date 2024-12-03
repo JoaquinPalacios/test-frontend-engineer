@@ -65,6 +65,7 @@ Game Store is a modern e-commerce web application built with Next.js, Apollo Cli
 ├── public/ # Static assets
 ├── src/ # Source code
 │ ├── app/ # Next.js 13+ App Router
+│ │ ├── checkout/ # Checkout page route
 │ │ ├── product/ # Product page routes
 │ │ ├── globals.css # Global styles
 │ │ ├── layout.tsx # Root layout
