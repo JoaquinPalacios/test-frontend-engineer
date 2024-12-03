@@ -1,3 +1,64 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+	"extends": ["next/core-web-vitals", "next/typescript"],
+	"plugins": ["@typescript-eslint", "simple-import-sort", "unused-imports", "import", "unicorn"],
+	"rules": {
+		"no-console": "warn",
+
+		// Tailwind
+		"tailwindcss/no-custom-classname": "off",
+
+		// Typescript
+		"@typescript-eslint/no-unused-vars": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-var-requires": "off",
+
+		// React
+		"react/no-unescaped-entities": "off",
+
+		// Unicorn
+		"unicorn/no-null": "off",
+		"unicorn/prevent-abbreviations": "off",
+		"unicorn/filename-case": [
+			"error",
+			{
+				"cases": {
+					"camelCase": true,
+					"kebabCase": true,
+					"pascalCase": true
+				}
+			}
+		],
+
+		// Unused
+		"unused-imports/no-unused-imports": "warn",
+
+		// Simple Import Sort
+		"simple-import-sort/imports": [
+			2,
+			{
+				"groups": [
+					// 1. CSS/SCSS imports
+					["^.+\\.s?css$"],
+
+					// 2. React & Next.js related
+					["^react", "^next"],
+
+					// 3. External libraries/packages
+					["^@?\\w"],
+
+					// 4. Internal aliases & components (assuming @ is used for aliases)
+					["^@/"],
+
+					// 5. Relative imports
+					["^\\.\\.(?!/?$)", "^\\.\\./?$"], // Parent imports (../)
+					["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"] // Same-folder imports (./)
+				]
+			}
+		]
+	},
+	"settings": {
+		"tailwindcss": {
+			"callees": ["classnames", "clsx", "ctl", "cva", "tv", "cn"]
+		}
+	}
 }
