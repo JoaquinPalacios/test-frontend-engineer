@@ -66,7 +66,7 @@ function ProductContent({ slug }: { slug: string }) {
 
   return (
     <article
-      className="min-h-screen p-8 lg:p-20"
+      className="min-h-full p-8 lg:p-20 container"
       aria-labelledby={product.title}
     >
       <Link
