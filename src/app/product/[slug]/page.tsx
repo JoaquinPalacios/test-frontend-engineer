@@ -1,5 +1,5 @@
 'use client';
-import { Suspense, use,useEffect, useState } from "react";
+import { Suspense,use,useEffect, useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,10 +7,14 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 
 function ProductContent({ slug }: { slug: string }) {
-  const { addToCart } = useCart();
+  const { addToCart, cart } = useCart();
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [quantity, setQuantity] = useState(1);
 
+  /**
+   * Fetch product from API
+   */
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -19,6 +23,12 @@ function ProductContent({ slug }: { slug: string }) {
         const data = await res.json();
         setProduct(data);
         setLoading(false);
+        
+        // Check if product is already in cart and set initial quantity
+        const cartItem = cart.find(item => item.id === parseInt(slug));
+        if (cartItem) {
+          setQuantity(cartItem.quantity);
+        }
       } catch (error) {
         console.error('Error:', error);
         setLoading(false);
@@ -26,11 +36,32 @@ function ProductContent({ slug }: { slug: string }) {
     };
 
     fetchProduct();
-  }, [slug]);
+  }, [slug, cart]);
 
+  /**
+   * Render loading state
+   */
   if (loading || !product) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
+
+  /**
+   * Handle quantity change
+   */
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity >= 1) {
+      setQuantity(newQuantity);
+    }
+  };
+
+  /**
+   * Handle add to cart
+   */
+  const handleAddToCart = () => {
+    if (quantity >= 1) {
+      addToCart({ ...product, quantity });
+    }
+  };
 
   return (
     <div className="min-h-screen p-8 sm:p-20">
@@ -79,8 +110,25 @@ function ProductContent({ slug }: { slug: string }) {
             <p className="text-gray-600 capitalize">{product.category}</p>
           </div>
 
+          <div className="flex items-center gap-4 mt-4">
+            <button
+              onClick={() => handleQuantityChange(quantity - 1)}
+              className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors"
+              disabled={quantity <= 1}
+            >
+              -
+            </button>
+            <span className="w-12 text-center font-medium">{quantity}</span>
+            <button
+              onClick={() => handleQuantityChange(quantity + 1)}
+              className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              +
+            </button>
+          </div>
+
           <button 
-            onClick={() => addToCart(product)}
+            onClick={handleAddToCart}
             className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors mt-4"
           >
             Add to Cart

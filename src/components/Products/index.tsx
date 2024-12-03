@@ -9,10 +9,14 @@ const Products = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 6;
   
+  
     useEffect(() => {
       fetchProducts();
     }, []);
   
+    /**
+     * Fetch products
+     */
     const fetchProducts = async () => {
       try {
         const response = await fetch('https://fakestoreapi.com/products');
@@ -26,14 +30,22 @@ const Products = () => {
       }
     };
   
-    // Get current products
+    /**
+     * Get current products.
+     */
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
     const totalPages = Math.ceil(products.length / productsPerPage);
   
+    /**
+     * Paginate
+     */
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   
+    /**
+     * Render loading state
+     */
     if (loading) {
       return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
     }

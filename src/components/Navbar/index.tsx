@@ -1,15 +1,20 @@
 'use client';
 import { useState } from 'react';
 import { IoMdCart } from "react-icons/io";
+import { IoCloseSharp } from "react-icons/io5";
 import Link from 'next/link';
 
 import Cart from '@/components/Cart';
 import { useCart } from '@/context/CartContext';
+import { cn } from '@/utils/cn';
 
 export default function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { totalItems } = useCart();
 
+  /**
+   * Toggle cart
+   */
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
   };
@@ -30,15 +35,17 @@ export default function Navbar() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 w-64 bg-white h-full shadow-lg transform ${
-          isCartOpen ? 'translate-x-0' : 'translate-x-full'
-        } transition-transform duration-300 ease-in-out z-50`}
+        className={cn(
+          "fixed top-0 right-0 w-64 bg-slate-500 h-full shadow-lg transform transition-transform duration-300 ease-in-out z-50",
+          isCartOpen ? "translate-x-0" : "translate-x-full"
+        )}
       >
         <button
           onClick={toggleCart}
           className="absolute top-4 right-4 text-gray-800"
         >
-          Close
+          <IoCloseSharp size={24} color="white" />
+          
         </button>
         <Cart />
       </div>
