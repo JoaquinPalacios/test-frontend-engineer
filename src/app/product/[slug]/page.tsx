@@ -1,16 +1,36 @@
+'use client';
+import { Suspense, use,useEffect, useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
 
-async function getProduct(id: string) {
-  const res = await fetch(`https://fakestoreapi.com/products/${id}`);
-  if (!res.ok) throw new Error('Failed to fetch product');
-  return res.json();
-}
+import { useCart } from "@/context/CartContext";
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const { slug } = await params;
-  const product = await getProduct(slug);
+function ProductContent({ slug }: { slug: string }) {
+  const { addToCart } = useCart();
+  const [product, setProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`https://fakestoreapi.com/products/${slug}`);
+        if (!res.ok) throw new Error('Failed to fetch product');
+        const data = await res.json();
+        setProduct(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [slug]);
+
+  if (loading || !product) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen p-8 sm:p-20">
@@ -59,11 +79,24 @@ export default async function ProductPage({ params }: { params: { slug: string }
             <p className="text-gray-600 capitalize">{product.category}</p>
           </div>
 
-          <button className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors mt-4">
+          <button 
+            onClick={() => addToCart(product)}
+            className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors mt-4"
+          >
             Add to Cart
           </button>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = use(params);
+  
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <ProductContent slug={resolvedParams.slug} />
+    </Suspense>
   );
 }

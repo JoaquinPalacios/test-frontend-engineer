@@ -1,6 +1,6 @@
 {
 	"extends": ["next/core-web-vitals", "next/typescript"],
-	"plugins": ["@typescript-eslint", "simple-import-sort", "unused-imports", "import", "unicorn"],
+	"plugins": ["@typescript-eslint", "simple-import-sort", "unused-imports", "unicorn"],
 	"rules": {
 		"no-console": "warn",
 

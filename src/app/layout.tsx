@@ -3,6 +3,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
+import Navbar from "@/components/Navbar";
+import { CartProvider } from "@/context/CartContext";
+import { cn } from "@/utils/cn";
+
 const roboto = Roboto({
   weight: ["400", "700"],
   subsets: ["latin"],
@@ -23,9 +27,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.className} antialiased`}
-      >
-        {children}
+        className={cn(roboto.className, "antialiased")}
+      >   
+        <CartProvider>
+          <Navbar />
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
