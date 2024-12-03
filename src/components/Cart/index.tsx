@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 
-import { useCart } from '@/context/CartContext';
+import { useCart } from '@/features/hooks/use-cart';
 
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();

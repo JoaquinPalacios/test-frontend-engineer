@@ -5,8 +5,8 @@ import { IoCloseSharp } from "react-icons/io5";
 import Link from 'next/link';
 
 import Cart from '@/components/Cart';
-import { useCart } from '@/context/CartContext';
-import { cn } from '@/utils/cn';
+import { useCart } from '@/features/hooks/use-cart';
+import { cn } from '@/utils/helpers/cn';
 
 export default function Navbar() {
   const [isCartOpen, setIsCartOpen] = useState(false);

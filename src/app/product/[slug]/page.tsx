@@ -1,62 +1,65 @@
-'use client';
-import { Suspense,use,useEffect, useState } from "react";
+"use client";
+import { Suspense, use, useEffect, useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useCart } from "@/context/CartContext";
+import { useQuery } from "@apollo/client";
+
+import { useCart } from "@/features/hooks/use-cart";
+import { GET_PRODUCT } from "@/graphql/queries/product";
+import { useScreenDetector } from "@/utils/hooks/useScreenDetector";
 
 function ProductContent({ slug }: { slug: string }) {
   const { addToCart, cart } = useCart();
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const { isTablet, isMobile } = useScreenDetector();
 
-  /**
-   * Fetch product from API
-   */
+  const { loading, error, data } = useQuery(GET_PRODUCT, {
+    variables: { id: slug },
+  });
+
+  // Check if product is in cart and set initial quantity
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await fetch(`https://fakestoreapi.com/products/${slug}`);
-        if (!res.ok) throw new Error('Failed to fetch product');
-        const data = await res.json();
-        setProduct(data);
-        setLoading(false);
-        
-        // Check if product is already in cart and set initial quantity
-        const cartItem = cart.find(item => item.id === parseInt(slug));
-        if (cartItem) {
-          setQuantity(cartItem.quantity);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        setLoading(false);
-      }
-    };
+    const cartItem = cart.find((item) => item.id === parseInt(slug));
+    if (cartItem) {
+      setQuantity(cartItem.quantity);
+    }
+  }, [cart, slug]);
 
-    fetchProduct();
-  }, [slug, cart]);
-
-  /**
-   * Render loading state
-   */
-  if (loading || !product) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
-  /**
-   * Handle quantity change
-   */
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Error: {error.message}
+      </div>
+    );
+  }
+
+  // Access the product directly from data (not data.product)
+  const product = data?.product;
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Product not found
+      </div>
+    );
+  }
+
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity >= 1) {
       setQuantity(newQuantity);
     }
   };
 
-  /**
-   * Handle add to cart
-   */
   const handleAddToCart = () => {
     if (quantity >= 1) {
       addToCart({ ...product, quantity });
@@ -65,13 +68,13 @@ function ProductContent({ slug }: { slug: string }) {
 
   return (
     <div className="min-h-screen p-8 sm:p-20">
-      <Link 
-        href="/" 
+      <Link
+        href="/"
         className="inline-block mb-8 text-blue-600 hover:underline"
       >
         ← Back to products
       </Link>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="aspect-square relative">
           <Image
@@ -84,7 +87,7 @@ function ProductContent({ slug }: { slug: string }) {
 
         <div className="flex flex-col gap-6">
           <h1 className="text-3xl font-bold">{product.title}</h1>
-          
+
           <div className="flex items-center gap-4">
             <p className="text-2xl text-green-600 font-bold">
               ${product.price}
@@ -92,10 +95,10 @@ function ProductContent({ slug }: { slug: string }) {
             <div className="flex items-center gap-2">
               <span className="flex items-center gap-1">
                 <AiFillStar className="text-yellow-400" />
-                {product.rating.rate}
+                {product.rating?.rate ?? "N/A"}
               </span>
               <span className="text-sm text-gray-500">
-                ({product.rating.count} reviews)
+                ({product.rating?.count ?? 0} reviews)
               </span>
             </div>
           </div>
@@ -127,7 +130,7 @@ function ProductContent({ slug }: { slug: string }) {
             </button>
           </div>
 
-          <button 
+          <button
             onClick={handleAddToCart}
             className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors mt-4"
           >
@@ -139,11 +142,21 @@ function ProductContent({ slug }: { slug: string }) {
   );
 }
 
-export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+export default function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const resolvedParams = use(params);
-  
+
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
       <ProductContent slug={resolvedParams.slug} />
     </Suspense>
   );

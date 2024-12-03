@@ -4,8 +4,9 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
 import Navbar from "@/components/Navbar";
-import { CartProvider } from "@/context/CartContext";
-import { cn } from "@/utils/cn";
+import { CartProvider } from "@/features/context/CartContext";
+import { ApolloProvider } from "@/providers/apollo-provider";
+import { cn } from "@/utils/helpers/cn";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -29,10 +30,12 @@ export default function RootLayout({
       <body
         className={cn(roboto.className, "antialiased")}
       >   
-        <CartProvider>
-          <Navbar />
-          {children}
-        </CartProvider>
+        <ApolloProvider>
+          <CartProvider>
+            <Navbar />
+            {children}
+          </CartProvider>
+        </ApolloProvider>
       </body>
     </html>
   );
