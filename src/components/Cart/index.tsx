@@ -1,10 +1,11 @@
-'use client';
-import Image from 'next/image';
+"use client";
+import Image from "next/image";
 
-import { useCart } from '@/features/hooks/use-cart';
+import { useCart } from "@/features/hooks/use-cart";
 
 export default function Cart() {
-  const { cart, removeFromCart, updateQuantity, totalItems, totalPrice } = useCart();
+  const { cart, removeFromCart, updateQuantity, totalItems, totalPrice } =
+    useCart();
 
   /**
    * Handle quantity change
@@ -18,16 +19,14 @@ export default function Cart() {
   };
 
   if (totalItems === 0) {
-    return (
-      <div className="p-4 pt-16 text-center">
-        Your cart is empty
-      </div>
-    );
+    return <div className="p-4 pt-16 text-center">Your cart is empty</div>;
   }
 
   return (
     <div className="p-4 pt-16">
-      <h2 className="text-2xl font-bold mb-4">Your Cart ({totalItems} items)</h2>
+      <h2 className="text-2xl font-bold mb-4">
+        Your Cart ({totalItems} items)
+      </h2>
       <div className="flex flex-col gap-4">
         {cart.map((item) => (
           <div key={item.id} className="flex gap-4 border rounded-lg p-4">
@@ -44,17 +43,21 @@ export default function Cart() {
               <p className="text-green-600">${item.price}</p>
               <div className="flex items-center gap-2 mt-2">
                 <button
-                  onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                  onClick={() =>
+                    handleQuantityChange(item.id, item.quantity - 1)
+                  }
                   className="px-2 py-1 border rounded"
                 >
-                  -
+                  <span className="sr-only">Decrease quantity</span>-
                 </button>
                 <span>{item.quantity}</span>
                 <button
-                  onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                  onClick={() =>
+                    handleQuantityChange(item.id, item.quantity + 1)
+                  }
                   className="px-2 py-1 border rounded"
                 >
-                  +
+                  <span className="sr-only">Increase quantity</span>+
                 </button>
                 <button
                   onClick={() => removeFromCart(item.id)}

@@ -10,6 +10,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       href={`/product/${product.id}`}
       key={product.id}
       className="border rounded-lg flex flex-col gap-4 hover:shadow-lg transition-shadow"
+      aria-label={`View details for ${product.title}`}
     >
       <div className="aspect-square relative">
         <Image

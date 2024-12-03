@@ -65,7 +65,10 @@ function ProductContent({ slug }: { slug: string }) {
   };
 
   return (
-    <article className="min-h-screen p-8 lg:p-20">
+    <article
+      className="min-h-screen p-8 lg:p-20"
+      aria-labelledby={product.title}
+    >
       <Link
         href="/"
         className="inline-block mb-8 text-blue-600 hover:underline"
@@ -119,14 +122,14 @@ function ProductContent({ slug }: { slug: string }) {
               className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-500 transition-colors"
               disabled={quantity <= 1}
             >
-              -
+              <span className="sr-only">Decrease quantity</span>-
             </button>
             <span className="w-12 text-center font-medium">{quantity}</span>
             <button
               onClick={() => handleQuantityChange(quantity + 1)}
               className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-full hover:bg-gray-500 transition-colors"
             >
-              +
+              <span className="sr-only">Increase quantity</span>+
             </button>
           </div>
 

@@ -38,11 +38,11 @@ const ProductGrid = () => {
   );
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
         {currentProducts.map((product: Product) => (
           <ProductCard key={product.id} product={product} />
         ))}
-      </div>
+      </section>
 
       {products.length > productsPerPage && (
         <Pagination
