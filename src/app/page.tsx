@@ -8,7 +8,6 @@ export default function Home() {
         <p className="text-lg text-gray-600 mb-12">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit.
         </p>
-
         <ProductGrid />
       </div>
     </main>
