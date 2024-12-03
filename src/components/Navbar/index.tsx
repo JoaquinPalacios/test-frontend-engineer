@@ -19,6 +19,13 @@ export default function Navbar() {
     setIsCartOpen(!isCartOpen);
   };
 
+  /**
+   * Close cart
+   */
+  const closeCart = () => {
+    setIsCartOpen(false);
+  };
+
   return (
     <header className="bg-gray-800 text-white py-4 flex justify-center items-center">
       <nav className="container flex justify-between items-center">
@@ -48,7 +55,7 @@ export default function Navbar() {
           >
             <IoCloseSharp size={24} color="white" />
           </button>
-          <Cart />
+          <Cart onCheckout={closeCart} />
         </div>
 
         {/* Overlay */}

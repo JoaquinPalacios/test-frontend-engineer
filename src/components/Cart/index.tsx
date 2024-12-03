@@ -1,9 +1,11 @@
 "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { useCart } from "@/features/hooks/use-cart";
 
-export default function Cart() {
+export default function Cart({ onCheckout }: { onCheckout: () => void }) {
+  const router = useRouter();
   const { cart, removeFromCart, updateQuantity, totalItems, totalPrice } =
     useCart();
 
@@ -16,6 +18,11 @@ export default function Cart() {
     } else {
       updateQuantity(itemId, newQuantity);
     }
+  };
+
+  const handleCheckout = () => {
+    onCheckout(); // Close the sidebar
+    router.push("/checkout");
   };
 
   if (totalItems === 0) {
@@ -70,7 +77,16 @@ export default function Cart() {
           </div>
         ))}
         <div className="mt-4 text-right">
-          <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
+          <p className="text-xl font-bold mb-4">
+            Total: ${totalPrice.toFixed(2)}
+          </p>
+          <button
+            onClick={handleCheckout}
+            className="w-full bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors"
+            disabled={totalItems === 0}
+          >
+            Proceed to Checkout
+          </button>
         </div>
       </div>
     </div>
