@@ -20,7 +20,7 @@ export default function CheckoutPage() {
     <main className="container mx-auto py-16 px-4">
       <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
           <div className="space-y-4">
@@ -97,7 +97,7 @@ export default function CheckoutPage() {
             </Link>
           </div>
         )}
-      </div>
+      </section>
     </main>
   );
 }
